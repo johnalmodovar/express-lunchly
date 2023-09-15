@@ -73,9 +73,9 @@ class Customer {
                   phone,
                   notes
            FROM customers
-           WHERE first_name ILIKE '%'||$1||'%' OR last_name ILIKE '%'||$1||'%'
+           WHERE CONCAT(first_name, ' ', last_name) ILIKE $1
            ORDER BY last_name, first_name`,
-      [searchTerm]
+      [`%${searchTerm}%`]
     );
     const customers = results.rows;
 
@@ -88,7 +88,7 @@ class Customer {
 
   /** gets top 10 customers with most reservations */
 
-  static async getBestCustomers() {
+  static async getBestCustomers(amt = 10) {
     const results = await db.query(
       `SELECT c.id,
                   c.first_name AS "firstName",
@@ -101,7 +101,8 @@ class Customer {
         ON c.id = r.customer_id
         GROUP BY c.id
         ORDER BY reservation_count DESC, c.last_name, c.first_name
-        LIMIT 10`
+        LIMIT $1`,
+      [amt]
     );
 
     return results.rows.map(c => new Customer(c));
