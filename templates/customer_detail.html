@@ -15,6 +15,12 @@
 
       <p>
         <a class="btn btn-primary" href="/{{ customer.id }}/edit/">Edit</a>
+        <form
+         action="/{{ customer.id }}/delete/"
+         method="POST">
+          <button class="btn btn-danger">Delete</button>
+        </form>
+
       </p>
 
       <h2>Reservations</h2>

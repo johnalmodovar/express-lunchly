@@ -142,6 +142,12 @@ class Customer {
       );
     }
   }
+
+  async remove() {
+    await db.query(
+      `DELETE FROM customers WHERE id = $1`, [this.id]
+    );
+  }
 }
 
 module.exports = Customer;

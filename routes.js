@@ -97,6 +97,17 @@ router.post("/:id/edit/", async function (req, res, next) {
   return res.redirect(`/${customer.id}/`);
 });
 
+/** Handle deleting a customer. */
+
+router.post("/:id/delete/", async function (req, res) {
+  const customer = await Customer.get(req.params.id);
+
+  console.log("customer", customer)
+  await customer.remove();
+
+  return res.redirect("/");
+})
+
 /** Handle adding a new reservation. */
 
 router.post("/:id/add-reservation/", async function (req, res, next) {
@@ -139,7 +150,7 @@ router.post("/:id/edit-reservation/", async function (req, res) {
   reservation.notes = req.body.notes;
   await reservation.save();
 
-  return res.redirect(`/${reservation.customer_id}/`);
+  return res.redirect(`/${reservation.customerId}/`);
 });
 
 module.exports = router;

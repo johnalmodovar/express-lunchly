@@ -6,6 +6,7 @@ const express = require("express");
 const nunjucks = require("nunjucks");
 const routes = require("./routes");
 const { NotFoundError } = require("./expressError");
+const flash = require("connect-flash");
 
 const app = new express();
 
@@ -16,6 +17,8 @@ nunjucks.configure("templates", {
   autoescape: true,
   express: app,
 });
+
+app.use(flash());
 
 app.use(routes);
 
