@@ -22,7 +22,9 @@
         <ul>
           {% for reservation in reservations %}
             <li>
-              <b>{{ reservation.getFormattedStartAt() }}</b>
+              <a href="/{{ reservation.id }}/edit-reservation/">
+                <b>{{ reservation.getFormattedStartAt() }}</b>
+              </a>
               for {{ reservation.numGuests }}
             </li>
           {% endfor %}

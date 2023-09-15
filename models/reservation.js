@@ -17,6 +17,31 @@ class Reservation {
     this.notes = notes;
   }
 
+  /** Grabs single reservation by id */
+
+  static async get(id) {
+    const results = await db.query(
+      `SELECT id,
+                  customer_id AS "customerId",
+                  start_at AS "startAt",
+                  num_guests AS "numGuests",
+                  notes
+           FROM reservations
+           WHERE id = $1`,
+      [id],
+    );
+
+    const reservation = results.rows[0];
+
+    if (reservation === undefined) {
+      const err = new Error(`No such Reservation: ${id}`);
+      err.status = 404;
+      throw err;
+    }
+
+    return new Reservation(reservation);
+  }
+
   /** formatter for startAt */
 
   getFormattedStartAt() {
@@ -56,7 +81,7 @@ class Reservation {
             `UPDATE reservations
              SET start_at=$1,
                  num_guests=$2,
-                 notes=$3,
+                 notes=$3
              WHERE id = $4`, [
             this.startAt,
             this.numGuests,
