@@ -17,6 +17,12 @@ class Customer {
     this.notes = notes;
   }
 
+  /** Function to grab full name from customer */
+
+  fullName() {
+    return `${this.firstName} ${this.lastName}`;
+  }
+
   /** find all customers. */
 
   static async all() {
@@ -79,9 +85,26 @@ class Customer {
     return customers.map(c => new Customer(c));
   }
 
+  /** gets top 10 customers with most reservations */
 
-
-
+  static async getBestCustomers() {
+    const results = await db.query(
+      `SELECT c.id,
+                  c.first_name AS "firstName",
+                  c.last_name AS "lastName",
+                  c.phone,
+                  c.notes,
+                  COUNT(customer_id) AS reservation_count
+        FROM customers AS c
+        JOIN reservations AS r
+        ON c.id = r.customer_id
+        GROUP BY c.id
+        ORDER BY reservation_count DESC
+        LIMIT 10`
+    );
+      console.log("results", results)
+    return results.rows.map(c => new Customer(c));
+  }
 
   /** get all reservations for this customer. */
 
@@ -116,12 +139,6 @@ class Customer {
       ],
       );
     }
-  }
-
-  /** Function to grab full name from customer */
-
-  fullName() {
-    return `${this.firstName} ${this.lastName}`;
   }
 }
 
