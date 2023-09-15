@@ -52,14 +52,14 @@ class Reservation {
 
   static async getReservationsForCustomer(customerId) {
     const results = await db.query(
-          `SELECT id,
+      `SELECT id,
                   customer_id AS "customerId",
                   num_guests AS "numGuests",
                   start_at AS "startAt",
                   notes AS "notes"
            FROM reservations
            WHERE customer_id = $1`,
-        [customerId],
+      [customerId],
     );
 
     return results.rows.map(row => new Reservation(row));
@@ -70,24 +70,24 @@ class Reservation {
   async save() {
     if (this.id === undefined) {
       const result = await db.query(
-            `INSERT INTO reservations (customer_id, start_at, num_guests, notes)
+        `INSERT INTO reservations (customer_id, start_at, num_guests, notes)
              VALUES ($1, $2, $3, $4)
              RETURNING id`,
-          [this.customerId, this.startAt, this.numGuests, this.notes],
+        [this.customerId, this.startAt, this.numGuests, this.notes],
       );
       this.id = result.rows[0].id;
     } else {
       await db.query(
-            `UPDATE reservations
+        `UPDATE reservations
              SET start_at=$1,
                  num_guests=$2,
                  notes=$3
              WHERE id = $4`, [
-            this.startAt,
-            this.numGuests,
-            this.notes,
-            this.id,
-          ],
+        this.startAt,
+        this.numGuests,
+        this.notes,
+        this.id,
+      ],
       );
     }
   }
