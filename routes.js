@@ -32,7 +32,7 @@ router.get("/", async function (req, res, next) {
     customers = await Customer.all();
   }
 
-  
+
 
   return res.render("customer_list.html", { customers });
 });
@@ -103,10 +103,17 @@ router.post("/:id/edit/", async function (req, res, next) {
 
 router.post("/:id/delete/", async function (req, res) {
   const customer = await Customer.get(req.params.id);
+
+  const reservations = await customer.getReservations();
+
+  for (const reservation of reservations) {
+    reservation.remove();
+  }
+
   await customer.remove();
 
   return res.redirect("/");
-})
+});
 
 /** Handle adding a new reservation. */
 
@@ -154,3 +161,12 @@ router.post("/:id/edit-reservation/", async function (req, res) {
 });
 
 module.exports = router;
+
+
+router.post("/:id/delete-reservation", async function (req, res) {
+  const reservation = await Reservation.get(req.params.id);
+  const customerId = reservation.customerId;
+  await reservation.remove();
+
+  return res.redirect(`/${customerId}/`);
+});

@@ -25,4 +25,8 @@
   <a href="/{{ customer.id }}/" class="btn btn-danger">Cancel</a>
 </form>
 
+<form action="/{{ reservation.id }}/delete-reservation" method="POST">
+  <button class="btn btn-danger my-2">Delete</button>
+</form>
+
 {% endblock %}
