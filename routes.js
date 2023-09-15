@@ -28,7 +28,15 @@ router.get("/", async function (req, res, next) {
 
 router.get("/top-ten/", async function (req, res) {
   const customers = await Customer.getBestCustomers();
-  return res.render("customer_list.html", { customers });
+
+  // const reservationPromises = customers.map(c => c.getReservations());
+  // const reservations = await Promise.all(reservationPromises);
+
+  // customers.map((c, idx) => {
+  //   c.reservationCount = reservations[idx].length;
+  // });
+
+  return res.render("customer_best_list.html", { customers });
 });
 
 /** Form to add a new customer. */

@@ -74,7 +74,8 @@ class Customer {
                   notes
            FROM customers
            WHERE first_name ILIKE '%'||$1||'%' OR last_name ILIKE '%'||$1||'%'
-           ORDER BY last_name, first_name`, [searchTerm]
+           ORDER BY last_name, first_name`,
+      [searchTerm]
     );
     const customers = results.rows;
 
@@ -94,15 +95,15 @@ class Customer {
                   c.last_name AS "lastName",
                   c.phone,
                   c.notes,
-                  COUNT(customer_id) AS reservation_count
+                  COUNT(*) AS reservation_count
         FROM customers AS c
         JOIN reservations AS r
         ON c.id = r.customer_id
         GROUP BY c.id
-        ORDER BY reservation_count DESC
+        ORDER BY reservation_count DESC, c.last_name, c.first_name
         LIMIT 10`
     );
-      console.log("results", results)
+
     return results.rows.map(c => new Customer(c));
   }
 
