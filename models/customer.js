@@ -14,12 +14,26 @@ class Customer {
     this.firstName = firstName;
     this.lastName = lastName;
     this.phone = phone;
-    this.notes = notes;
+    this._notes = notes;
   }
+
+
+  get notes() {
+    return this._notes;
+  }
+
+  set notes(val) {
+    if (!val) {
+      this._notes = '';
+    } else {
+      this._notes = val;
+    }
+  }
+
 
   /** Function to grab full name from customer */
 
-  fullName() {
+  get fullName() {
     return `${this.firstName} ${this.lastName}`;
   }
 
@@ -122,7 +136,7 @@ class Customer {
         `INSERT INTO customers (first_name, last_name, phone, notes)
              VALUES ($1, $2, $3, $4)
              RETURNING id`,
-        [this.firstName, this.lastName, this.phone, this.notes],
+        [this.firstName, this.lastName, this.phone, this._notes],
       );
       this.id = result.rows[0].id;
     } else {

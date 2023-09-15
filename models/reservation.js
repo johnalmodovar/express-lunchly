@@ -11,12 +11,45 @@ const db = require("../db");
 class Reservation {
   constructor({ id, customerId, numGuests, startAt, notes }) {
     this.id = id;
-    this.customerId = customerId;
-    this.numGuests = numGuests;
+    this._customerId = customerId;
+    this._numGuests = numGuests;
     this.startAt = startAt;
-    this.notes = notes;
+    this._notes = notes;
   }
 
+  get customerId() {
+    return this._customerId;
+  }
+
+  set customerId(val) {
+    if (this._customerId) throw new Error("Cannot reassign customer ID.");
+  }
+
+
+  get numGuests() {
+    return this._numGuests;
+  }
+
+  set numGuests(val) {
+    if (Number(val) < 1) throw new Error("Not a valid number of guests.");
+
+    this._numGuests = val;
+  }
+
+
+  get notes() {
+    return this._notes;
+  }
+
+  set notes(val) {
+    if (!val) {
+      this._notes = '';
+    } else {
+      this._notes = val;
+    }
+  }
+
+  
   /** Grabs single reservation by id */
 
   static async get(id) {
@@ -73,7 +106,7 @@ class Reservation {
         `INSERT INTO reservations (customer_id, start_at, num_guests, notes)
              VALUES ($1, $2, $3, $4)
              RETURNING id`,
-        [this.customerId, this.startAt, this.numGuests, this.notes],
+        [this._customerId, this.startAt, this._numGuests, this._notes],
       );
       this.id = result.rows[0].id;
     } else {
@@ -82,8 +115,8 @@ class Reservation {
              SET num_guests=$1,
                  notes=$2
              WHERE id = $3`, [
-        this.numGuests,
-        this.notes,
+        this._numGuests,
+        this._notes,
         this.id,
       ],
       );

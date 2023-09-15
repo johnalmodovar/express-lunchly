@@ -32,6 +32,8 @@ router.get("/", async function (req, res, next) {
     customers = await Customer.all();
   }
 
+  
+
   return res.render("customer_list.html", { customers });
 });
 
@@ -101,8 +103,6 @@ router.post("/:id/edit/", async function (req, res, next) {
 
 router.post("/:id/delete/", async function (req, res) {
   const customer = await Customer.get(req.params.id);
-
-  console.log("customer", customer)
   await customer.remove();
 
   return res.redirect("/");
@@ -146,7 +146,7 @@ router.post("/:id/edit-reservation/", async function (req, res) {
     throw new BadRequestError();
   }
   const reservation = await Reservation.get(req.params.id);
-  reservation.numGests = req.body.numGuests;
+  reservation.numGuests = req.body.numGuests;
   reservation.notes = req.body.notes;
   await reservation.save();
 
