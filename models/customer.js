@@ -90,6 +90,12 @@ class Customer {
       );
     }
   }
+
+  /** Function to grab full name from customer */
+
+  fullName() {
+    return `${this.firstName} ${this.lastName}`;
+  }
 }
 
 module.exports = Customer;
